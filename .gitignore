@@ -1,0 +1,12 @@
+# Node modules for frontend
+/frontend/node_modules/
+
+# Python virtual env for backend
+/backend/venv/
+
+# IDE files
+.vscode/
+.DS_Store
+
+# Logs
+*.log
