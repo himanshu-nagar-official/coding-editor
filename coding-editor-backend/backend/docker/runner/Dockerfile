@@ -1,7 +1,6 @@
-FROM python:3.11-slim
+FROM python:3.10-slim
 
-WORKDIR /code
+WORKDIR /app
 
-COPY entrypoint.py /code/entrypoint.py
-
-ENTRYPOINT ["python", "/code/entrypoint.py"]
+# No need to copy script.py — it will be mounted
+CMD ["python", "/app/script.py"]
