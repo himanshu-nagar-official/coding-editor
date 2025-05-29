@@ -114,6 +114,9 @@ daphne backend.asgi:application
 docker run -p 8000:8000 -v /var/run/docker.sock:/var/run/docker.sock app
 ```
 ```bash
+docker run -p 8000:8000 -v /var/run/docker.sock:/var/run/docker.sock -v /tmp/my_scripts_for_docker:/app/host_shared  app
+```
+```bash
 docker run -p 8000:8000 app
 ```
 ```bash
