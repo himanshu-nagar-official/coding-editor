@@ -110,6 +110,21 @@ pip install -r requirements.txt
 ```bash
 daphne backend.asgi:application
 ```
+```bash
+docker run -p 8000:8000 -v /var/run/docker.sock:/var/run/docker.sock app
+```
+```bash
+docker run -p 8000:8000 app
+```
+```bash
+docker run app
+```
+```bash
+docker build -t app .
+```
+```bash
+daphne -b 0.0.0.0 -p 8000 backend.asgi:application
+```
 > 💡 **Make sure Docker Desktop is installed and running** on your machine to enable backend code execution inside containers.
 ---
 
