@@ -5,6 +5,7 @@ import Terminal from './components/Terminal';
 export default function App() {
   const [code, setCode] = useState(`# Write your Python code here\nprint("Hello, World!")`);
   const [terminalOutput, setTerminalOutput] = useState('');
+  const [userInput, setUserInput] = useState('');
   const ws = useRef(null);
 
   useEffect(() => {
@@ -21,7 +22,7 @@ export default function App() {
   const runCode = () => {
     setTerminalOutput('');
     if (ws.current && ws.current.readyState === WebSocket.OPEN) {
-      ws.current.send(JSON.stringify({ code }));
+      ws.current.send(JSON.stringify({ code, userInput }));
     }
   };
 
@@ -33,6 +34,19 @@ export default function App() {
         <div style={styles.leftPane}>
           <div style={styles.editorBox}>
             <CodeEditor code={code} setCode={setCode} />
+          </div>
+          <div style={{ marginTop: '1rem' }}>
+            <label style={{ fontWeight: 'bold' }}>Input:</label>
+            <textarea
+              rows="4"
+              style={{ width: '100%', marginTop: '0.5rem' }}
+              value={userInput}
+              onChange={(e) => setUserInput(e.target.value)}
+              placeholder="Example for multiple inputs:
+John [For String: name = input()]
+25 [For Number: number = int(input())]
+1 3 6 5 4 [For List: listInput = list(map(int, input().split()))]"
+            />
           </div>
           <button style={styles.runButton} onClick={runCode}>▶ Run Code</button>
         </div>

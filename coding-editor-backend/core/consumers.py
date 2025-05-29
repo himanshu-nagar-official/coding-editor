@@ -1,14 +1,12 @@
-import asyncio
 import json
+import os
 import tempfile
-import threading
-from channels.generic.websocket import AsyncWebsocketConsumer
 import subprocess
+from channels.generic.websocket import AsyncWebsocketConsumer
 
 class CodeRunnerConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         await self.accept()
-        self.loop = asyncio.get_event_loop()
 
     async def disconnect(self, close_code):
         pass
@@ -16,33 +14,33 @@ class CodeRunnerConsumer(AsyncWebsocketConsumer):
     async def receive(self, text_data):
         data = json.loads(text_data)
         code = data.get("code", "")
+        user_input = data.get("userInput", "")
+        await self.run_code_in_docker(code, user_input)
 
-        # Run code in a separate thread so it doesn't block the event loop
-        threading.Thread(target=self.run_code_in_docker, args=(code,)).start()
-
-    def run_code_in_docker(self, code):
-        with tempfile.NamedTemporaryFile(mode='w+', delete=False, suffix='.py') as tmp:
-            tmp.write(code)
-            tmp.flush()
-            tmp_path = tmp.name
-
-        volume_mapping = f"{tmp_path}:/app/script.py:ro"
-
+    async def run_code_in_docker(self, code, user_input=""):
         try:
-            result = subprocess.run(
-                ["docker", "run", "--rm", "-v", volume_mapping, "code-runner"],
-                stdout=subprocess.PIPE,
-                stderr=subprocess.PIPE,
-                text=True
-            )
-            output = result.stdout + result.stderr
+            with tempfile.TemporaryDirectory() as temp_dir:
+                script_path = os.path.join(temp_dir, "script.py")
+                with open(script_path, "w") as f:
+                    f.write(code)
+
+                command = [
+                    "docker", "run", "--rm", "-i",
+                    "-v", f"{temp_dir}:/app",
+                    "python:3.10-slim",
+                    "python", "/app/script.py"
+                ]
+
+                # Send user input to stdin and get combined stdout+stderr
+                result = subprocess.run(
+                    command,
+                    input=user_input.encode(),
+                    stdout=subprocess.PIPE,
+                    stderr=subprocess.PIPE
+                )
+
+                output = result.stdout.decode() + result.stderr.decode()
+                await self.send(text_data=json.dumps({"output": output}))
+
         except Exception as e:
-            output = f"Error running Docker: {str(e)}"
-
-        # Send the output back to the WebSocket safely
-        asyncio.run_coroutine_threadsafe(self.send_output(output), self.loop)
-
-    async def send_output(self, output):
-        await self.send(text_data=json.dumps({
-            "output": output
-        }))
+            await self.send(text_data=json.dumps({"output": f"Error: {str(e)}"}))
