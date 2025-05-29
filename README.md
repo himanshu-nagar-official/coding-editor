@@ -128,6 +128,10 @@ docker build -t app .
 ```bash
 daphne -b 0.0.0.0 -p 8000 backend.asgi:application
 ```
+
+```bash
+docker run -p 8000:8000 -v /var/run/docker.sock:/var/run/docker.sock -v /tmp/my_code_execution_space:/app/host_temp_runs app
+```
 > 💡 **Make sure Docker Desktop is installed and running** on your machine to enable backend code execution inside containers.
 ---
 
