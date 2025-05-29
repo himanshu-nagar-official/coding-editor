@@ -1,3 +1,4 @@
-django
-channels
-daphne
+channels==4.2.2
+daphne==4.2.0
+Django==5.2.1
+docker==7.1.0
