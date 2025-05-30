@@ -48,7 +48,6 @@ coding-editor/
 │   │   ├── urls.py
 │   │   ├── wsgi.py
 │   │   ├── __init__.py
-│   │   └── __pycache__
 │   ├── core/
 │   │   ├── admin.py
 │   │   ├── apps.py
@@ -59,7 +58,6 @@ coding-editor/
 │   │   ├── tests.py
 │   │   ├── views.py
 │   │   ├── __init__.py
-│   │   └── __pycache__
 │   ├── manage.py
 │   └── requirements.txt
 ├── coding-editor-frontend/
@@ -74,7 +72,9 @@ coding-editor/
 │   │   ├── index.css
 │   │   └── main.jsx
 │   ├── index.html
+│   ├── eslint.config.js
 │   ├── package.json
+│   ├── package-lock.json
 │   ├── .gitignore
 │   └── vite.config.js
 ├── .gitignore
@@ -110,28 +110,7 @@ pip install -r requirements.txt
 ```bash
 daphne backend.asgi:application
 ```
-```bash
-docker run -p 8000:8000 -v /var/run/docker.sock:/var/run/docker.sock app
-```
-```bash
-docker run -p 8000:8000 -v /var/run/docker.sock:/var/run/docker.sock -v /tmp/my_scripts_for_docker:/app/host_shared  app
-```
-```bash
-docker run -p 8000:8000 app
-```
-```bash
-docker run app
-```
-```bash
-docker build -t app .
-```
-```bash
-daphne -b 0.0.0.0 -p 8000 backend.asgi:application
-```
 
-```bash
-docker run -p 8000:8000 -v /var/run/docker.sock:/var/run/docker.sock -v /tmp/my_code_execution_space:/app/host_temp_runs app
-```
 > 💡 **Make sure Docker Desktop is installed and running** on your machine to enable backend code execution inside containers.
 ---
 
