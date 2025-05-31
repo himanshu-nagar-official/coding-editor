@@ -22,3 +22,6 @@ dist/
 
 # Docker
 *.pid
+
+#Run Commands
+run_commands/
