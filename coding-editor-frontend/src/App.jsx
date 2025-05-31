@@ -9,7 +9,7 @@ export default function App() {
   const ws = useRef(null);
 
   useEffect(() => {
-    ws.current = new WebSocket('wss://35.244.58.188/ws/code-runner/');
+    ws.current = new WebSocket('ws://127.0.0.1:8000/ws/code-runner/');
     ws.current.onopen = () => setTerminalOutput("✅ Connected to backend\n");
     ws.current.onmessage = (event) => {
       const data = JSON.parse(event.data);
